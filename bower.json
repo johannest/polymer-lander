@@ -1,0 +1,19 @@
+{
+  "name": "polymer-lander",
+  "version": "0.0.0",
+  "authors": [
+    "Johannes Tuikkala <johannes@vaadin.com>"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "polymer": "~0.5.1"
+  }
+}

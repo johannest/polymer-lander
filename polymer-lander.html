@@ -1,0 +1,110 @@
+<link rel="import" href="bower_components/polymer/polymer.html">
+<link rel="import" href="lander-smoke.html"></link>
+<link rel="import" href="lander-explosion.html"></link>
+
+<polymer-element name="polymer-lander" >
+
+  <template>
+    <svg id="shipShape" width="50" height="70">
+      <path id="ship" d="M20 60 L30 61 L40 60 L35 30 L30 30 L25 30 Z" transform="scale(1,1)" style="fill:rgba(255,255,255,1);stroke-width:1;stroke:rgb(0,0,0)" />
+      <path id="door" d="M27 52 L33 52 L31 42 L29 42 Z" style="fill:rgba(255,255,255,1);stroke-width:1;stroke:rgb(0,0,0)" />
+    </svg>
+
+    <style>
+      :host {
+        display: block;
+        position: absolute;
+        transform: none;
+      }
+      svg {
+        position: absolute;
+        top: 0;
+        left: 0;
+        transform: translate(160px,-50px);
+
+      }
+    </style>
+    <content select="*"></content>
+  </template>
+
+  <script>
+    Polymer("polymer-lander", {
+      ship_x: 50,
+      ship_y: 50,
+      ship_velocity: 0,
+      fuel: 100,
+      thruster_a: 250,
+      limit_velocity: 0.1,
+      thruster_on: false,
+
+      getY: function() {
+        return this.ship_y;
+      },
+      getV: function() {
+        return this.ship_velocity;
+      },
+      getFuel: function() {
+        return this.fuel;
+      },
+
+      thrust: function() {
+        if (this.fuel>0) {
+          for (i=0; i<3; i++) {
+            var s = document.createElement('lander-smoke');
+            s.intializeSmoke(1,1);
+            this.shadowRoot.appendChild(s);
+          }
+          this.thruster_on = true;
+        }
+      },
+
+      update: function(gravity,time_step) {
+        this.ship_velocity += gravity*time_step;
+        if (this.thruster_on) {
+          this.fuel -= 4;
+          this.ship_velocity -= this.thruster_a*time_step;
+          this.thruster_on = false;
+        }
+        this.ship_y += (this.ship_velocity*gravity/2.0);
+        this.updateSmoke();
+      },
+
+      updateSmoke: function() {
+        [].forEach.call(this.shadowRoot.querySelectorAll('lander-smoke'), function(el, i) {
+          el.increaseTime();
+          if (el.getTimer()>100) {
+            el.parentNode.removeChild(el);
+          }
+        });
+      },
+
+      halt: function() {
+        if (this.ship_velocity>this.limit_velocity) {
+            this.explode();
+        } else {
+          this.removeSmoke();
+        }
+      },
+
+      removeSmoke: function() {
+        [].forEach.call(this.shadowRoot.querySelectorAll('lander-smoke'), function(el, i) {
+            el.parentNode.removeChild(el);
+        });
+      },
+
+      explode: function() {
+        console.log("BOOM!");
+        this.shadowRoot.querySelector('#ship').setAttribute("transform", "scale(0,0)");
+        this.shadowRoot.querySelector('#door').setAttribute("transform", "scale(0,0)");
+        var s = document.createElement('lander-explosion');
+        s.id = "explosion"
+        this.shadowRoot.appendChild(s);
+        s.explode();
+      },
+
+      reDraw: function() {
+        this.style.transform="translateY("+this.ship_y+"px)";
+      }
+    });
+  </script>
+</polymer-element>

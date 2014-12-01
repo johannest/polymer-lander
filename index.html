@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <meta charset="utf-8"></meta>
+      <script src="bower_components/webcomponentsjs/webcomponents.js"></script>
+      <link rel="import" href="polymer-lander-frame.html"></link>
+   </head>
+   <body>
+     <polymer-lander-frame id="game_1"></polymer-lander-frame>
+
+     <script type="text/javascript">
+      window.requestAnimationFrame(step);
+
+      function step() {
+        document.querySelector("#game_1").gameTick();
+        if (document.querySelector("#game_1").game_on) {
+          window.requestAnimationFrame(step);
+        }
+      }
+     </script>
+   </body>
+</html>

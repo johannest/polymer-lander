@@ -1,0 +1,79 @@
+<link rel="import" href="bower_components/polymer/polymer.html">
+<link rel="import" href="polymer-lander.html"></link>
+<link rel="import" href="lander-fuel-indicator.html"></link>
+
+<polymer-element name="polymer-lander-frame" on-click="{{buttonClick}}">
+  <template>
+    <svg id="landerFrame" width="400" height="600">
+        <defs>
+          <linearGradient id="skyGradient" x1="0" x2="0" y1="0" y2="1">
+              <stop offset="0%"   stop-color="blue" stop-opacity="0.33" />
+              <stop offset="100%" stop-color="blue" stop-opacity="0.05" />
+          </linearGradient>
+        </defs>
+
+        <rect width="400" height="600" fill="url(#skyGradient)" style="stroke-width:1;stroke:rgb(0,0,0)" />
+        <text x="5" y="15" fill="black">Polymer-lander. Click mouse to decelerate spacecraft.</text>
+    </svg>
+    <lander-fuel-indicator id="fuel"></lander-fuel-indicator>
+    <polymer-lander id="shipx"></polymer-lander>
+
+    <style>
+      :host {
+        display: block;
+        position: absolute;
+        transform: none;
+      }
+      svg {
+        position: absolute;
+        top: 0;
+        left: 0;
+      }
+    </style>
+
+    <content select="*"></content>
+  </template>
+
+  <script>
+    Polymer("polymer-lander-frame", {
+        origo_y: 587,
+        time_step: 0.0003,
+        gravity: 9.81,
+        time_elapsed: 0,
+        game_on: false,
+
+        attached: function() {
+            console.log("attached");
+            this.game_on = true;
+        },
+
+        gameTick: function() {
+          if (this.game_on) {
+            this.updateGame();
+            this.redraw();
+            ++this.time_elapsed;
+          }
+        },
+
+        updateGame: function() {
+          if (this.$.shipx.getY()<this.origo_y) {
+            this.$.shipx.update(this.gravity,this.time_step);
+          } else {
+            this.$.shipx.halt();
+            this.game_on = false;
+          }
+        },
+
+        redraw: function() {
+            this.$.shipx.reDraw();
+            this.$.fuel.setValue(this.$.shipx.getFuel());
+            console.log("time: "+this.time_elapsed+"   velocity: "+this.$.shipx.getV()+"   fuel: "+this.$.shipx.getFuel());
+        },
+
+        buttonClick: function(event, detail, sender) {
+            this.$.shipx.thrust();
+        }
+    });
+  </script>
+
+</polymer-element>

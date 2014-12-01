@@ -1,0 +1,60 @@
+<link rel="import" href="bower_components/polymer/polymer.html">
+
+<polymer-element name="lander-explosion" >
+
+  <template>
+    <style>
+      :host {
+        display: block;
+        position: absolute;
+        transform: none;
+      }
+      svg {
+        position: absolute;
+        top: 0;
+        left: 0;
+        transform: translate(185px,15px);
+      }
+    </style>
+    <content select="*"></content>
+  </template>
+
+  <script>
+  Polymer("lander-explosion", {
+      time_elapsed: 0,
+      explosion_time: 50,
+
+      explode: function() {
+        console.log("explode");
+        for (i=0; i<50; i++) {
+          var s = document.createElement('lander-smoke');
+          s.intializeSmoke(-1 - Math.random(),10);
+          this.shadowRoot.appendChild(s);
+        }
+        window.requestAnimationFrame(this.step_explosion);
+      },
+
+      explosionTick: function() {
+        ++this.time_elapsed;
+        [].forEach.call(this.shadowRoot.querySelectorAll('lander-smoke'), function(el, i) {
+          el.increaseTime();
+          if (el.getTimer()>20) {
+            el.parentNode.removeChild(el);
+          }
+        });
+      },
+
+      isDone: function() {
+        return this.time_elapsed>this.explosion_time;
+      },
+
+      step_explosion: function() {
+        var explosion = document.querySelector("#game_1").shadowRoot.querySelector("polymer-lander").shadowRoot.querySelector("lander-explosion");
+        explosion.explosionTick();
+        if (!explosion.isDone()) {
+          window.requestAnimationFrame(explosion.step_explosion);
+        }
+      }
+  });
+  </script>
+</polymer-element>
