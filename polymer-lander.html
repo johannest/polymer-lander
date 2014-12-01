@@ -21,7 +21,6 @@
         top: 0;
         left: 0;
         transform: translate(160px,-50px);
-
       }
     </style>
     <content select="*"></content>
@@ -79,10 +78,9 @@
       },
 
       halt: function() {
+        this.removeSmoke();
         if (this.ship_velocity>this.limit_velocity) {
             this.explode();
-        } else {
-          this.removeSmoke();
         }
       },
 
@@ -93,7 +91,7 @@
       },
 
       explode: function() {
-        console.log("BOOM!");
+        //console.log("BOOM!");
         this.shadowRoot.querySelector('#ship').setAttribute("transform", "scale(0,0)");
         this.shadowRoot.querySelector('#door').setAttribute("transform", "scale(0,0)");
         var s = document.createElement('lander-explosion');
