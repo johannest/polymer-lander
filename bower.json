@@ -5,7 +5,12 @@
     "Johannes Tuikkala <johannes@vaadin.com>"
   ],
   "license": "MIT",
-  "private": true,
+  "private": false,
+  "keywords": [
+    "game",
+    "polymer",
+    "web-components"
+  ],
   "ignore": [
     "**/.*",
     "node_modules",
