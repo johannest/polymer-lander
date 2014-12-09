@@ -11,3 +11,7 @@ Quick setup
  * Clone the project
  * Start webserver by typing `serve` in project dir
  * Check the result in browser `http://localhost:3000/index.html`
+ 
+Demo
+----
+ http://johannes.app.fi/polymer-lander/index.html
